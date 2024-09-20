@@ -1,0 +1,96 @@
+---
+title: "p8105_hw1_rw3033"
+output: github_document
+---
+
+
+# Problem 1
+
+Load the penguins dataset
+```{r}
+data("penguins", package = "palmerpenguins")
+```
+
+Describe the dataset
+```{r}
+library(tidyverse)
+names(penguins)
+nrow(penguins)
+ncol(penguins)
+mean(pull(penguins, flipper_length_mm), na.rm = TRUE)
+```
+Description:
+There are 3 kinds of penguin species.
+The dataset contains 344 rows and 8 columns.
+The 8 variables (column names) include: species, island, bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g, sex, and year.
+The mean flipper length is 200.9152 mm.
+
+
+Make a scatterplot
+```{r}
+library(ggplot2)
+
+ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
+  geom_point(na.rm = TRUE) +
+  labs(title = "Flipper Length vs. Bill Length",
+       x = "Bill Length (mm)",
+       y = "Flipper Length (mm)",
+       color = "Species")
+```
+Export the scatterplot
+```{r}
+ggsave("scatterplot_penguins.png")
+```
+
+
+# Problem 2
+
+Create a data frame
+```{r}
+library(tidyverse)
+
+random_sample = rnorm(10)
+logical_vector = random_sample > 0
+character_vector = letters[1:10]
+factor_vector = factor(rep(c("low", "medium", "high"), length.out = 10)) 
+
+df = tibble(
+  random_sample = random_sample,
+  logical_vector = logical_vector,
+  character_vector = character_vector,
+  factor_vector = factor_vector
+)
+
+view(df)
+
+```
+
+Calculate the means of each variable
+```{r}
+mean(pull(df, random_sample))
+mean(pull(df, logical_vector))
+mean(pull(df, character_vector))
+mean(pull(df, factor_vector))
+
+```
+
+Description:
+random_sample works, since it is numeric;
+logical_vector works, since logical TRUE is treated as 1 and FALSE as 0;
+character_vector gives an error, since characters cannot be averaged;
+factor_vector gives an error, since factors are categorical, not numeric.
+
+
+
+Write a code chunk that applies the as.numeric function to the logical, character, and factor variables 
+```{r}
+as.numeric(pull(df,logical_vector))  
+as.numeric(pull(df,character_vector)) 
+as.numeric(pull(df,factor_vector))
+```
+
+Description:
+as.numeric(df$random_sample)  works, since it is already numeric;
+as.numeric(df$logical_vector) works, as TRUE becomes 1, FALSE becomes 0;
+as.numeric(df$character_vector) gives an error, since characters cannot be converted;
+as.numeric(df$factor_vector) works, it converts factor levels to their vector levels. Since these numbers denotes the vector levels, they do not make sense in calculating the mean.
